@@ -1,41 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spin to Win</title>
+    <title>Kraving Kebab - Spin to Win</title>
     <style>
         body {
-            text-align: center;
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 20px;
+            text-align: center;
         }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+
+        #logo {
+            width: 150px; /* Adjust logo size here */
+            margin-bottom: 20px;
+        }
+
         .wheel-container {
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 500px; /* Larger wheel */
+            height: 500px; /* Larger wheel */
             margin: 50px auto;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
+
         .wheel {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             border: 5px solid #444;
-            overflow: hidden;
             position: relative;
             transform: rotate(0deg);
             transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
+
         .wheel .segment {
             position: absolute;
             width: 50%;
             height: 50%;
             transform-origin: 100% 100%;
             background: #fff;
-            clip-path: polygon(100% 0, 0 0, 100% 100%);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+
         .pointer {
             position: absolute;
             top: -20px;
@@ -43,8 +64,10 @@
             width: 20px;
             height: 50px;
             background: red;
+            border-radius: 10px;
             z-index: 10;
         }
+
         button {
             padding: 10px 20px;
             font-size: 16px;
@@ -54,32 +77,51 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         button:disabled {
             background: grey;
         }
+
         #result {
             margin-top: 20px;
             font-size: 18px;
             font-weight: bold;
         }
+
+        p {
+            font-size: 18px;
+            font-weight: normal;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>Spin the Wheel</h1>
+
+    <!-- Logo Section -->
+    <img src="YOUR_LOGO_LINK_HERE" id="logo" alt="Kraving Kebab Logo">
+    <h1>Spin to Win</h1>
+    <p>Kraving Kebab - Zakręć kołem i wygraj!</p>
+
+    <!-- Wheel Section -->
     <div class="wheel-container">
         <div class="pointer"></div>
         <div class="wheel" id="wheel">
-            <div class="segment" style="transform: rotate(0deg); background: #FF5733;">Red</div>
-            <div class="segment" style="transform: rotate(45deg); background: #33FF57;">Green</div>
-            <div class="segment" style="transform: rotate(90deg); background: #3357FF;">Blue</div>
-            <div class="segment" style="transform: rotate(135deg); background: #FF33A6;">Pink</div>
-            <div class="segment" style="transform: rotate(180deg); background: #FFFF33;">Yellow</div>
-            <div class="segment" style="transform: rotate(225deg); background: #33FFFF;">Cyan</div>
-            <div class="segment" style="transform: rotate(270deg); background: #FFA533;">Orange</div>
-            <div class="segment" style="transform: rotate(315deg); background: #A533FF;">Purple</div>
+            <!-- Wheel Segments -->
+            <div class="segment" style="transform: rotate(0deg); background: #FF5733;">Zniżka 5%</div>
+            <div class="segment" style="transform: rotate(36deg); background: #33FF57;">Zniżka 10%</div>
+            <div class="segment" style="transform: rotate(72deg); background: #3357FF;">Zniżka 15%</div>
+            <div class="segment" style="transform: rotate(108deg); background: #FF33A6;">Darmowy Napój</div>
+            <div class="segment" style="transform: rotate(144deg); background: #FFFF33;">1+1 Darmowy Kebab</div>
+            <div class="segment" style="transform: rotate(180deg); background: #33FFFF;">Darmowe Frytki</div>
+            <div class="segment" style="transform: rotate(216deg); background: #FFA533;">Zniżka 50%</div>
+            <div class="segment" style="transform: rotate(252deg); background: #A533FF;">Darmowe 4 Nuggetsy</div>
+            <div class="segment" style="transform: rotate(288deg); background: #FF7F50;">Extra Mięso w Kebabie</div>
+            <div class="segment" style="transform: rotate(324deg); background: #8B4513;">Wielki Kebab</div>
         </div>
     </div>
-    <button id="spinButton">Spin</button>
+
+    <!-- Spin Button -->
+    <button id="spinButton">Zakręć</button>
     <p id="result"></p>
 
     <script>
@@ -87,20 +129,31 @@
         const spinButton = document.getElementById("spinButton");
         const result = document.getElementById("result");
 
-        // Define the rewards
-        const rewards = ["Red", "Green", "Blue", "Pink", "Yellow", "Cyan", "Orange", "Purple"];
+        // Define rewards with their probabilities (hidden from the user)
+        const rewards = [
+            { name: "Zniżka 5%", prob: 20 },
+            { name: "Zniżka 10%", prob: 10 },
+            { name: "Zniżka 15%", prob: 10 },
+            { name: "Darmowy Napój", prob: 20 },
+            { name: "1+1 Darmowy Kebab", prob: 1 },
+            { name: "Darmowe Frytki", prob: 5 },
+            { name: "Zniżka 50%", prob: 2 },
+            { name: "Darmowe 4 Nuggetsy", prob: 8 },
+            { name: "Extra Mięso w Kebabie", prob: 10 },
+            { name: "Wielki Kebab", prob: 5 },
+        ];
 
         // Check if the user has spun in the last 24 hours
         const lastSpinTime = localStorage.getItem("lastSpinTime");
         if (lastSpinTime && new Date() - new Date(lastSpinTime) < 24 * 60 * 60 * 1000) {
             spinButton.disabled = true;
-            result.textContent = "You can only spin once every 24 hours. Come back later!";
+            result.textContent = "Możesz zakręcić tylko raz na 24 godziny. Wróć później!";
         }
 
         spinButton.addEventListener("click", () => {
             // Calculate a random angle for spinning
-            const randomSegment = Math.floor(Math.random() * rewards.length);
-            const angle = randomSegment * (360 / rewards.length) + 720; // Spin multiple times
+            const randomSegment = weightedRandom(rewards);
+            const angle = rewards.indexOf(randomSegment) * (360 / rewards.length) + 720; // Spin multiple times
 
             // Spin the wheel
             wheel.style.transform = `rotate(${angle}deg)`;
@@ -113,9 +166,23 @@
 
             // Show the result after spinning
             setTimeout(() => {
-                result.textContent = `You won: ${rewards[randomSegment]}!`;
+                result.textContent = `Wygrałeś: ${randomSegment.name}`;
             }, 4000);
         });
+
+        // Function to pick a reward based on probability
+        function weightedRandom(rewards) {
+            const totalProbability = rewards.reduce((acc, reward) => acc + reward.prob, 0);
+            const randomNum = Math.random() * totalProbability;
+            let cumulativeProbability = 0;
+
+            for (let reward of rewards) {
+                cumulativeProbability += reward.prob;
+                if (randomNum < cumulativeProbability) {
+                    return reward;
+                }
+            }
+        }
     </script>
 </body>
 </html>
