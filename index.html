@@ -3,192 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kraving Kebab - Spin to Win</title>
+    <title>Spin to Win - Kraving Kebab</title>
     <style>
-        /* General Styles */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #header {
             text-align: center;
+            margin-bottom: 30px;
         }
 
-        h1 {
-            font-size: 32px;
-            margin-bottom: 20px;
-        }
-
-        /* Logo Style */
         #logo {
-            width: 200px; /* Adjusted logo size */
-            margin-bottom: 20px;
+            width: 200px;
         }
 
-        /* Wheel Container Style */
-        .wheel-container {
-            position: relative;
-            width: 500px;
-            height: 500px;
-            margin: 50px auto;
-            border-radius: 50%;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            background-color: #fff;
+        .card-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
         }
 
-        .wheel {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform: rotate(0deg);
-            transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-
-        .wheel .segment {
-            position: absolute;
-            width: 50%;
-            height: 50%;
-            transform-origin: 100% 100%;
+        .card {
+            width: 150px;
+            height: 200px;
+            background: #3498db;
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
             font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            perspective: 1000px;
+            cursor: pointer;
+            transition: transform 0.6s;
+        }
+
+        .card .card-inner {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card .card-front,
+        .card .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
             font-weight: bold;
         }
 
-        /* Pointer Style */
-        .pointer {
-            position: absolute;
-            top: -20px;
-            left: calc(50% - 10px);
-            width: 20px;
-            height: 50px;
-            background: red;
-            border-radius: 10px;
-            z-index: 10;
+        .card .card-back {
+            background: #e74c3c;
+            color: white;
+            transform: rotateY(180deg);
         }
 
-        /* Button Style */
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background: green;
+        #spinButton {
+            background-color: #2ecc71;
             color: white;
+            padding: 10px 20px;
+            font-size: 18px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 20px;
+            transition: background-color 0.3s;
         }
 
-        button:disabled {
-            background: grey;
+        #spinButton:hover {
+            background-color: #27ae60;
         }
 
-        /* Result Style */
         #result {
             margin-top: 20px;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
-        }
-
-        /* Info Text */
-        p {
-            font-size: 18px;
-            font-weight: normal;
-            margin-top: 10px;
+            color: #34495e;
         }
     </style>
 </head>
 <body>
 
-    <!-- Logo Section -->
-    <img src="https://scontent.fpoz6-1.fna.fbcdn.net/v/t39.30808-6/463376588_122112514142550191_8544725461124623471_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=kic0PPHKGdIQ7kNvgGN70_s&_nc_zt=23&_nc_ht=scontent.fpoz6-1.fna&_nc_gid=AfrtB1OG-AmXZ_8Zy2FD87J&oh=00_AYC-7Q60-0yw4FYc-1UHLun-82zkrellUdXSYLY9fCtD-Q&oe=6777DAA1" id="logo" alt="Kraving Kebab Logo">
-    <h1>Spin to Win</h1>
-    <p>Kraving Kebab - Zakręć kołem i wygraj!</p>
+    <div id="header">
+        <img id="logo" src="https://scontent.fpoz6-1.fna.fbcdn.net/v/t39.30808-6/463376588_122112514142550191_8544725461124623471_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=kic0PPHKGdIQ7kNvgGN70_s&_nc_zt=23&_nc_ht=scontent.fpoz6-1.fna&_nc_gid=AfrtB1OG-AmXZ_8Zy2FD87J&oh=00_AYC-7Q60-0yw4FYc-1UHLun-82zkrellUdXSYLY9fCtD-Q&oe=6777DAA1" alt="Kraving Kebab Logo">
+        <h2>Spin to Win</h2>
+    </div>
 
-    <!-- Wheel Section -->
-    <div class="wheel-container">
-        <div class="pointer"></div>
-        <div class="wheel" id="wheel">
-            <!-- Wheel Segments -->
-            <div class="segment" style="transform: rotate(0deg); background: #FF5733;">Zniżka 5%</div>
-            <div class="segment" style="transform: rotate(36deg); background: #33FF57;">Zniżka 10%</div>
-            <div class="segment" style="transform: rotate(72deg); background: #3357FF;">Zniżka 15%</div>
-            <div class="segment" style="transform: rotate(108deg); background: #FF33A6;">Darmowy Napój</div>
-            <div class="segment" style="transform: rotate(144deg); background: #FFFF33;">1+1 Darmowy Kebab</div>
-            <div class="segment" style="transform: rotate(180deg); background: #33FFFF;">Darmowe Frytki</div>
-            <div class="segment" style="transform: rotate(216deg); background: #FFA533;">Zniżka 50%</div>
-            <div class="segment" style="transform: rotate(252deg); background: #A533FF;">Darmowe 4 Nuggetsy</div>
-            <div class="segment" style="transform: rotate(288deg); background: #FF7F50;">Extra Mięso w Kebabie</div>
-            <div class="segment" style="transform: rotate(324deg); background: #8B4513;">Wielki Kebab</div>
+    <div class="card-container">
+        <div class="card" id="card1">
+            <div class="card-inner">
+                <div class="card-front">Zniżka 5%</div>
+                <div class="card-back">Gratulacje! Zniżka 5%</div>
+            </div>
+        </div>
+        <div class="card" id="card2">
+            <div class="card-inner">
+                <div class="card-front">Zniżka 10%</div>
+                <div class="card-back">Gratulacje! Zniżka 10%</div>
+            </div>
+        </div>
+        <div class="card" id="card3">
+            <div class="card-inner">
+                <div class="card-front">Zniżka 15%</div>
+                <div class="card-back">Gratulacje! Zniżka 15%</div>
+            </div>
+        </div>
+        <div class="card" id="card4">
+            <div class="card-inner">
+                <div class="card-front">Darmowy Napój</div>
+                <div class="card-back">Gratulacje! Darmowy Napój</div>
+            </div>
+        </div>
+        <div class="card" id="card5">
+            <div class="card-inner">
+                <div class="card-front">1+1 Darmowy Kebab</div>
+                <div class="card-back">Gratulacje! 1+1 Darmowy Kebab</div>
+            </div>
+        </div>
+        <div class="card" id="card6">
+            <div class="card-inner">
+                <div class="card-front">Darmowe Frytki</div>
+                <div class="card-back">Gratulacje! Darmowe Frytki</div>
+            </div>
+        </div>
+        <div class="card" id="card7">
+            <div class="card-inner">
+                <div class="card-front">Zniżka 50%</div>
+                <div class="card-back">Gratulacje! Zniżka 50%</div>
+            </div>
+        </div>
+        <div class="card" id="card8">
+            <div class="card-inner">
+                <div class="card-front">Darmowe 4 Nuggetsy</div>
+                <div class="card-back">Gratulacje! Darmowe 4 Nuggetsy</div>
+            </div>
+        </div>
+        <div class="card" id="card9">
+            <div class="card-inner">
+                <div class="card-front">Extra Mięso</div>
+                <div class="card-back">Gratulacje! Extra Mięso</div>
+            </div>
         </div>
     </div>
 
-    <!-- Spin Button -->
     <button id="spinButton">Zakręć</button>
     <p id="result"></p>
 
     <script>
-        const wheel = document.getElementById("wheel");
+        const cards = document.querySelectorAll(".card");
         const spinButton = document.getElementById("spinButton");
         const result = document.getElementById("result");
 
-        // Rewards and their probabilities
-        const rewards = [
-            { name: "Zniżka 5%", prob: 20 },
-            { name: "Zniżka 10%", prob: 10 },
-            { name: "Zniżka 15%", prob: 10 },
-            { name: "Darmowy Napój", prob: 20 },
-            { name: "1+1 Darmowy Kebab", prob: 1 },
-            { name: "Darmowe Frytki", prob: 5 },
-            { name: "Zniżka 50%", prob: 2 },
-            { name: "Darmowe 4 Nuggetsy", prob: 8 },
-            { name: "Extra Mięso w Kebabie", prob: 10 },
-            { name: "Wielki Kebab", prob: 5 },
-        ];
-
-        // Check if the user has spun within the last 24 hours
-        const lastSpinTime = localStorage.getItem("lastSpinTime");
-        if (lastSpinTime && new Date() - new Date(lastSpinTime) < 24 * 60 * 60 * 1000) {
-            spinButton.disabled = true;
-            result.textContent = "Możesz zakręcić tylko raz na 24 godziny. Wróć później!";
-        }
-
         spinButton.addEventListener("click", () => {
-            // Calculate random angle for the spin
-            const randomSegment = weightedRandom(rewards);
-            const angle = rewards.indexOf(randomSegment) * (360 / rewards.length) + 720;
+            const randomIndex = Math.floor(Math.random() * cards.length);
+            const chosenCard = cards[randomIndex];
 
-            // Spin the wheel
-            wheel.style.transform = `rotate(${angle}deg)`;
+            // Flip the card to reveal the reward
+            chosenCard.classList.add("flipped");
 
-            // Disable the button
-            spinButton.disabled = true;
-
-            // Save the time of the spin
-            localStorage.setItem("lastSpinTime", new Date());
-
-            // Display the result after the spin
+            // Show result after a short delay
             setTimeout(() => {
-                result.textContent = `Wygrałeś: ${randomSegment.name}`;
-            }, 4000);
+                const reward = chosenCard.querySelector(".card-back").textContent;
+                result.textContent = `Wygrałeś: ${reward}`;
+            }, 1000); // Delay to allow the flip animation
         });
-
-        // Function for weighted random selection
-        function weightedRandom(rewards) {
-            const totalProbability = rewards.reduce((acc, reward) => acc + reward.prob, 0);
-            const randomNum = Math.random() * totalProbability;
-            let cumulativeProbability = 0;
-
-            for (let reward of rewards) {
-                cumulativeProbability += reward.prob;
-                if (randomNum < cumulativeProbability) {
-                    return reward;
-                }
-            }
-        }
     </script>
+
 </body>
 </html>
