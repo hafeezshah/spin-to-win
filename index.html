@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kraving Kebab - Spin to Win</title>
     <style>
+        /* General Styles */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -14,30 +15,31 @@
         }
 
         h1 {
-            font-size: 30px;
+            font-size: 32px;
             margin-bottom: 20px;
         }
 
+        /* Logo Style */
         #logo {
-            width: 150px; /* Adjust logo size here */
+            width: 200px; /* Adjusted logo size */
             margin-bottom: 20px;
         }
 
+        /* Wheel Container Style */
         .wheel-container {
             position: relative;
-            width: 500px; /* Larger wheel */
-            height: 500px; /* Larger wheel */
+            width: 500px;
+            height: 500px;
             margin: 50px auto;
             border-radius: 50%;
             overflow: hidden;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            background-color: #fff;
         }
 
         .wheel {
             width: 100%;
             height: 100%;
-            border-radius: 50%;
-            border: 5px solid #444;
             position: relative;
             transform: rotate(0deg);
             transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -48,15 +50,15 @@
             width: 50%;
             height: 50%;
             transform-origin: 100% 100%;
-            background: #fff;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
             display: flex;
             justify-content: center;
             align-items: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
         }
 
+        /* Pointer Style */
         .pointer {
             position: absolute;
             top: -20px;
@@ -68,6 +70,7 @@
             z-index: 10;
         }
 
+        /* Button Style */
         button {
             padding: 10px 20px;
             font-size: 16px;
@@ -76,18 +79,21 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin-top: 20px;
         }
 
         button:disabled {
             background: grey;
         }
 
+        /* Result Style */
         #result {
             margin-top: 20px;
             font-size: 18px;
             font-weight: bold;
         }
 
+        /* Info Text */
         p {
             font-size: 18px;
             font-weight: normal;
@@ -129,7 +135,7 @@
         const spinButton = document.getElementById("spinButton");
         const result = document.getElementById("result");
 
-        // Define rewards with their probabilities (hidden from the user)
+        // Rewards and their probabilities
         const rewards = [
             { name: "Zniżka 5%", prob: 20 },
             { name: "Zniżka 10%", prob: 10 },
@@ -143,7 +149,7 @@
             { name: "Wielki Kebab", prob: 5 },
         ];
 
-        // Check if the user has spun in the last 24 hours
+        // Check if the user has spun within the last 24 hours
         const lastSpinTime = localStorage.getItem("lastSpinTime");
         if (lastSpinTime && new Date() - new Date(lastSpinTime) < 24 * 60 * 60 * 1000) {
             spinButton.disabled = true;
@@ -151,9 +157,9 @@
         }
 
         spinButton.addEventListener("click", () => {
-            // Calculate a random angle for spinning
+            // Calculate random angle for the spin
             const randomSegment = weightedRandom(rewards);
-            const angle = rewards.indexOf(randomSegment) * (360 / rewards.length) + 720; // Spin multiple times
+            const angle = rewards.indexOf(randomSegment) * (360 / rewards.length) + 720;
 
             // Spin the wheel
             wheel.style.transform = `rotate(${angle}deg)`;
@@ -161,16 +167,16 @@
             // Disable the button
             spinButton.disabled = true;
 
-            // Save the spin time
+            // Save the time of the spin
             localStorage.setItem("lastSpinTime", new Date());
 
-            // Show the result after spinning
+            // Display the result after the spin
             setTimeout(() => {
                 result.textContent = `Wygrałeś: ${randomSegment.name}`;
             }, 4000);
         });
 
-        // Function to pick a reward based on probability
+        // Function for weighted random selection
         function weightedRandom(rewards) {
             const totalProbability = rewards.reduce((acc, reward) => acc + reward.prob, 0);
             const randomNum = Math.random() * totalProbability;
