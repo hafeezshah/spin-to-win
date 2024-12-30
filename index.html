@@ -7,185 +7,178 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             background-color: #f4f4f4;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        #header {
             text-align: center;
-            margin-bottom: 30px;
         }
 
         #logo {
-            width: 200px;
+            margin-top: 20px;
+            width: 120px;
         }
 
-        .card-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
+        h2 {
+            font-size: 20px;
+            color: #333;
+            margin: 10px 0;
         }
 
-        .card {
-            width: 150px;
-            height: 200px;
-            background: #3498db;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 10px;
-            perspective: 1000px;
-            cursor: pointer;
-            transition: transform 0.6s;
-        }
-
-        .card .card-inner {
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
+        .wheel-container {
+            margin: 20px auto;
             position: relative;
+            width: 300px;
+            height: 300px;
         }
 
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .card .card-front,
-        .card .card-back {
-            position: absolute;
+        .wheel {
             width: 100%;
             height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 16px;
-            font-weight: bold;
+            border-radius: 50%;
+            border: 8px solid #444;
+            position: relative;
+            transform: rotate(0deg);
+            transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
-        .card .card-back {
-            background: #e74c3c;
+        .segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            background: #fff;
+            transform-origin: 100% 100%;
+            clip-path: polygon(0 0, 100% 0, 100% 100%);
+            text-align: center;
+            line-height: 150%;
             color: white;
-            transform: rotateY(180deg);
+            font-size: 14px;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
+        .pointer {
+            position: absolute;
+            top: -10px;
+            left: calc(50% - 10px);
+            width: 20px;
+            height: 60px;
+            background: red;
+            border-radius: 10px;
         }
 
         #spinButton {
-            background-color: #2ecc71;
-            color: white;
+            margin-top: 20px;
             padding: 10px 20px;
-            font-size: 18px;
+            background-color: green;
+            color: white;
+            font-size: 16px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
 
-        #spinButton:hover {
-            background-color: #27ae60;
+        #spinButton:disabled {
+            background-color: grey;
         }
 
         #result {
             margin-top: 20px;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
-            color: #34495e;
         }
     </style>
 </head>
 <body>
-
-    <div id="header">
-        <img id="logo" src="https://scontent.fpoz6-1.fna.fbcdn.net/v/t39.30808-6/463376588_122112514142550191_8544725461124623471_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=kic0PPHKGdIQ7kNvgGN70_s&_nc_zt=23&_nc_ht=scontent.fpoz6-1.fna&_nc_gid=AfrtB1OG-AmXZ_8Zy2FD87J&oh=00_AYC-7Q60-0yw4FYc-1UHLun-82zkrellUdXSYLY9fCtD-Q&oe=6777DAA1" alt="Kraving Kebab Logo">
-        <h2>Spin to Win</h2>
-    </div>
-
-    <div class="card-container">
-        <div class="card" id="card1">
-            <div class="card-inner">
-                <div class="card-front">Zniżka 5%</div>
-                <div class="card-back">Gratulacje! Zniżka 5%</div>
-            </div>
-        </div>
-        <div class="card" id="card2">
-            <div class="card-inner">
-                <div class="card-front">Zniżka 10%</div>
-                <div class="card-back">Gratulacje! Zniżka 10%</div>
-            </div>
-        </div>
-        <div class="card" id="card3">
-            <div class="card-inner">
-                <div class="card-front">Zniżka 15%</div>
-                <div class="card-back">Gratulacje! Zniżka 15%</div>
-            </div>
-        </div>
-        <div class="card" id="card4">
-            <div class="card-inner">
-                <div class="card-front">Darmowy Napój</div>
-                <div class="card-back">Gratulacje! Darmowy Napój</div>
-            </div>
-        </div>
-        <div class="card" id="card5">
-            <div class="card-inner">
-                <div class="card-front">1+1 Darmowy Kebab</div>
-                <div class="card-back">Gratulacje! 1+1 Darmowy Kebab</div>
-            </div>
-        </div>
-        <div class="card" id="card6">
-            <div class="card-inner">
-                <div class="card-front">Darmowe Frytki</div>
-                <div class="card-back">Gratulacje! Darmowe Frytki</div>
-            </div>
-        </div>
-        <div class="card" id="card7">
-            <div class="card-inner">
-                <div class="card-front">Zniżka 50%</div>
-                <div class="card-back">Gratulacje! Zniżka 50%</div>
-            </div>
-        </div>
-        <div class="card" id="card8">
-            <div class="card-inner">
-                <div class="card-front">Darmowe 4 Nuggetsy</div>
-                <div class="card-back">Gratulacje! Darmowe 4 Nuggetsy</div>
-            </div>
-        </div>
-        <div class="card" id="card9">
-            <div class="card-inner">
-                <div class="card-front">Extra Mięso</div>
-                <div class="card-back">Gratulacje! Extra Mięso</div>
-            </div>
+    <img id="logo" src="https://scontent.fpoz6-1.fna.fbcdn.net/v/t39.30808-6/463376588_122112514142550191_8544725461124623471_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=kic0PPHKGdIQ7kNvgGN70_s&_nc_zt=23&_nc_ht=scontent.fpoz6-1.fna&_nc_gid=AfrtB1OG-AmXZ_8Zy2FD87J&oh=00_AYC-7Q60-0yw4FYc-1UHLun-82zkrellUdXSYLY9fCtD-Q&oe=6777DAA1" alt="Kraving Kebab Logo">
+    <h2>Zakręć i Wygraj!</h2>
+    
+    <div class="wheel-container">
+        <div class="pointer"></div>
+        <div class="wheel" id="wheel">
+            <div class="segment" style="background: #FF5733; transform: rotate(0deg);">5% Zniżki</div>
+            <div class="segment" style="background: #FFBD33; transform: rotate(36deg);">10% Zniżki</div>
+            <div class="segment" style="background: #75FF33; transform: rotate(72deg);">15% Zniżki</div>
+            <div class="segment" style="background: #33FF57; transform: rotate(108deg);">Darmowy Napój</div>
+            <div class="segment" style="background: #33FFF3; transform: rotate(144deg);">1+1 Kebab</div>
+            <div class="segment" style="background: #3375FF; transform: rotate(180deg);">Darmowe Frytki</div>
+            <div class="segment" style="background: #9D33FF; transform: rotate(216deg);">50% Zniżki</div>
+            <div class="segment" style="background: #FF33A8; transform: rotate(252deg);">4 Nuggetsy</div>
+            <div class="segment" style="background: #FF5733; transform: rotate(288deg);">Mięso Extra</div>
+            <div class="segment" style="background: #FF5733; transform: rotate(324deg);">5% Zniżki</div>
         </div>
     </div>
 
-    <button id="spinButton">Zakręć</button>
-    <p id="result"></p>
+    <button id="spinButton">Zakręć Kołem</button>
+    <div id="result"></div>
 
     <script>
-        const cards = document.querySelectorAll(".card");
+        const wheel = document.getElementById("wheel");
         const spinButton = document.getElementById("spinButton");
         const result = document.getElementById("result");
 
-        spinButton.addEventListener("click", () => {
-            const randomIndex = Math.floor(Math.random() * cards.length);
-            const chosenCard = cards[randomIndex];
+        // Reward probabilities
+        const rewards = [
+            "5% Zniżki",
+            "10% Zniżki",
+            "15% Zniżki",
+            "Darmowy Napój",
+            "1+1 Kebab",
+            "Darmowe Frytki",
+            "50% Zniżki",
+            "4 Nuggetsy",
+            "Mięso Extra",
+            "5% Zniżki"
+        ];
 
-            // Flip the card to reveal the reward
-            chosenCard.classList.add("flipped");
+        const probabilities = [20, 10, 10, 20, 1, 5, 2, 8, 10, 14];
 
-            // Show result after a short delay
+        // Spin limit
+        const spinLimit = 24 * 60 * 60 * 1000; // 24 hours
+        const lastSpinTimeKey = "lastSpinTime";
+
+        function canSpin() {
+            const lastSpinTime = localStorage.getItem(lastSpinTimeKey);
+            if (!lastSpinTime) return true;
+            const elapsed = Date.now() - new Date(lastSpinTime);
+            return elapsed >= spinLimit;
+        }
+
+        function saveSpinTime() {
+            localStorage.setItem(lastSpinTimeKey, new Date().toISOString());
+        }
+
+        function spinWheel() {
+            if (!canSpin()) {
+                result.textContent = "Możesz zakręcić kołem za 24 godziny.";
+                return;
+            }
+
+            const total = probabilities.reduce((sum, p) => sum + p, 0);
+            const random = Math.random() * total;
+
+            let cumulative = 0;
+            let chosenIndex = 0;
+
+            for (let i = 0; i < probabilities.length; i++) {
+                cumulative += probabilities[i];
+                if (random < cumulative) {
+                    chosenIndex = i;
+                    break;
+                }
+            }
+
+            const angle = 360 * 5 + (360 - (chosenIndex * (360 / rewards.length)));
+            wheel.style.transform = `rotate(${angle}deg)`;
+
             setTimeout(() => {
-                const reward = chosenCard.querySelector(".card-back").textContent;
-                result.textContent = `Wygrałeś: ${reward}`;
-            }, 1000); // Delay to allow the flip animation
-        });
-    </script>
+                result.textContent = `Gratulacje! Wygrałeś: ${rewards[chosenIndex]}`;
+                saveSpinTime();
+                spinButton.disabled = true;
+            }, 4000);
+        }
 
+        spinButton.addEventListener("click", spinWheel);
+        spinButton.disabled = !canSpin();
+    </script>
 </body>
 </html>
